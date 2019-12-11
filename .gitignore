@@ -5,7 +5,7 @@ debug/*
 *.json
 *.mat
 src/.vscode/*
-!.vscode/*
+!.vscode/settings.json
 preds/*
 *.h5
 *.pth

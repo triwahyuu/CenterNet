@@ -2,6 +2,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os.path as osp
+import sys
+this_dir = osp.abspath(__file__)
+project_dir = '/'.join(this_dir.split('/')[:-3])
+if project_dir not in sys.path:
+    sys.path.insert(0, project_dir)
+
 import _init_paths
 
 import os
