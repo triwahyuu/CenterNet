@@ -16,8 +16,8 @@ from external.nms import soft_nms
 from opts import opts
 from logger import Logger
 from utils.utils import AverageMeter
-from datasets.dataset_factory import dataset_factory
-from detectors.detector_factory import detector_factory
+from datasets import build_dataset
+from detectors import build_detector
 
 
 class PrefetchDataset(torch.utils.data.Dataset):
@@ -50,11 +50,11 @@ class PrefetchDataset(torch.utils.data.Dataset):
 def prefetch_test(opt):
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
 
-    Dataset = dataset_factory[opt.dataset]
+    Dataset = build_dataset(opt.dataset)
     opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
     print(opt)
     Logger(opt)
-    Detector = detector_factory[opt.task]
+    Detector = build_detector(opt.task)
 
     split = 'val' if not opt.trainval else 'test'
     dataset = Dataset(opt, split)
@@ -86,11 +86,11 @@ def prefetch_test(opt):
 def test(opt):
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
 
-    Dataset = dataset_factory[opt.dataset]
+    Dataset = build_dataset(opt.dataset)
     opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
     print(opt)
     Logger(opt)
-    Detector = detector_factory[opt.task]
+    Detector = build_detector(opt.task)
 
     split = 'val' if not opt.trainval else 'test'
     dataset = Dataset(opt, split)

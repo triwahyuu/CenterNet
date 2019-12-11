@@ -13,7 +13,7 @@ from .dataset.kitti import KITTI
 from .dataset.coco_hp import COCOHP
 
 
-dataset_factory = {
+_dataset_factory = {
     'coco': COCO,
     'pascal': PascalVOC,
     'kitti': KITTI,
@@ -28,7 +28,11 @@ _sample_factory = {
 }
 
 
+def build_dataset(dataset):
+    return _dataset_factory[dataset]
+
+
 def get_dataset(dataset, task):
-    class Dataset(dataset_factory[dataset], _sample_factory[task]):
+    class Dataset(_dataset_factory[dataset], _sample_factory[task]):
         pass
     return Dataset

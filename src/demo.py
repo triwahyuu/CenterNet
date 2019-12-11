@@ -8,7 +8,7 @@ import os
 import cv2
 
 from opts import opts
-from detectors.detector_factory import detector_factory
+from detectors import build_detector
 
 image_ext = ['jpg', 'jpeg', 'png', 'webp']
 video_ext = ['mp4', 'mov', 'avi', 'mkv']
@@ -18,7 +18,7 @@ time_stats = ['tot', 'load', 'pre', 'net', 'dec', 'post', 'merge']
 def demo(opt):
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
     opt.debug = max(opt.debug, 1)
-    Detector = detector_factory[opt.task]
+    Detector = build_detector(opt.task)
     detector = Detector(opt)
 
     if opt.demo == 'webcam' or \
