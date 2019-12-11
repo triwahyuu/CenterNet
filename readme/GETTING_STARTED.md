@@ -70,6 +70,13 @@ Note that test time augmentation is not trivially applicable for 3D orientation.
 
 We have packed all the training scripts in the [experiments](../experiments) folder.
 The experiment names are correspond to the model name in the [model zoo](MODEL_ZOO.md).
+
+The main training script is in the [`src/main.py`](../src/main.py). The required argument to be passed is `task` argument. 
+There are 3 task that is available in this project:
+- Object Detection: `ctdet` or `exdet`
+- Human Pose Estimation: `multi_pose`
+- 3D Detection: `ddd`
+
 The number of GPUs for each experiments can be found in the scripts and the model zoo.
 In the case that you don't have 8 GPUs, you can follow the [linear learning rate rule](https://arxiv.org/abs/1706.02677) to scale the learning rate as batch size.
 For example, to train COCO object detection with dla on 2 GPUs, run

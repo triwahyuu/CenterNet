@@ -13,3 +13,6 @@ train_factory = {
   'ctdet': CtdetTrainer,
   'multi_pose': MultiPoseTrainer, 
 }
+
+def build_trainer(task):
+    return train_factory[task]
