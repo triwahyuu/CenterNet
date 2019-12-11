@@ -14,6 +14,7 @@ try:
 except:
     USE_TENSORBOARD = False
 
+
 class Logger(object):
     def __init__(self, opt):
         """Create a summary writer logging to log_dir."""
@@ -34,7 +35,7 @@ class Logger(object):
             opt_file.write('==> Cmd:\n')
             opt_file.write(str(sys.argv))
             opt_file.write('\n==> Opt:\n')
-            
+
             for k, v in sorted(args.items()):
                 opt_file.write('  %s: %s\n' % (str(k), str(v)))
 
@@ -58,7 +59,7 @@ class Logger(object):
             time_str = time.strftime('%Y-%m-%d-%H-%M')
             self.log.write('{}: {}'.format(time_str, txt))
         else:
-            self.log.write(txt)  
+            self.log.write(txt)
         self.start_line = False
         if '\n' in txt:
             self.start_line = True

@@ -14,12 +14,13 @@ from .networks.dlav0 import get_pose_net as get_dlav0
 from .networks.large_hourglass import get_large_hourglass_net
 
 _model_factory = {
-    'res': get_pose_net, # default Resnet with deconv
-    'dlav0': get_dlav0, # default DLAup
+    'res': get_pose_net,  # default Resnet with deconv
+    'dlav0': get_dlav0,  # default DLAup
     # 'dla': get_dla_dcn, ## unable to compile dcn
     # 'resdcn': get_pose_net_dcn,
     'hourglass': get_large_hourglass_net,
 }
+
 
 def create_model(arch, heads, head_conv):
     num_layers = int(arch[arch.find('_') + 1:]) if '_' in arch else 0
@@ -28,14 +29,16 @@ def create_model(arch, heads, head_conv):
     model = get_model(num_layers=num_layers, heads=heads, head_conv=head_conv)
     return model
 
-def load_model(model, model_path, optimizer=None, resume=False, 
+
+def load_model(model, model_path, optimizer=None, resume=False,
                lr=None, lr_step=None):
     start_epoch = 0
-    checkpoint = torch.load(model_path, map_location=lambda storage, loc: storage)
+    checkpoint = torch.load(
+        model_path, map_location=lambda storage, loc: storage)
     print('loaded {}, epoch {}'.format(model_path, checkpoint['epoch']))
     state_dict_ = checkpoint['state_dict']
     state_dict = {}
-  
+
     # convert data_parallal to model
     for k in state_dict_:
         if k.startswith('module') and not k.startswith('module_list'):
@@ -46,15 +49,15 @@ def load_model(model, model_path, optimizer=None, resume=False,
 
     # check loaded parameters and created model parameters
     msg = 'If you see this, your model does not fully load the ' + \
-            'pre-trained weight. Please make sure ' + \
-            'you have correctly specified --arch xxx ' + \
-            'or set the correct --num_classes for your own dataset.'
+        'pre-trained weight. Please make sure ' + \
+        'you have correctly specified --arch xxx ' + \
+        'or set the correct --num_classes for your own dataset.'
     for k in state_dict:
         if k in model_state_dict:
             if state_dict[k].shape != model_state_dict[k].shape:
-                print('Skip loading parameter {}, required shape{}, '\
-                    'loaded shape{}. {}'.format(
-                k, model_state_dict[k].shape, state_dict[k].shape, msg))
+                print('Skip loading parameter {}, required shape{}, '
+                      'loaded shape{}. {}'.format(
+                          k, model_state_dict[k].shape, state_dict[k].shape, msg))
                 state_dict[k] = model_state_dict[k]
         else:
             print('Drop parameter {}.'.format(k) + msg)
@@ -83,6 +86,7 @@ def load_model(model, model_path, optimizer=None, resume=False,
     else:
         return model
 
+
 def save_model(path, epoch, model, optimizer=None):
     if isinstance(model, torch.nn.DataParallel):
         state_dict = model.module.state_dict()
@@ -93,4 +97,3 @@ def save_model(path, epoch, model, optimizer=None):
     if not (optimizer is None):
         data['optimizer'] = optimizer.state_dict()
     torch.save(data, path)
-

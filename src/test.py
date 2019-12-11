@@ -19,6 +19,7 @@ from utils.utils import AverageMeter
 from datasets.dataset_factory import dataset_factory
 from detectors.detector_factory import detector_factory
 
+
 class PrefetchDataset(torch.utils.data.Dataset):
     def __init__(self, opt, dataset, pre_process_func):
         self.images = dataset.images
@@ -26,7 +27,7 @@ class PrefetchDataset(torch.utils.data.Dataset):
         self.img_dir = dataset.img_dir
         self.pre_process_func = pre_process_func
         self.opt = opt
-  
+
     def __getitem__(self, index):
         img_id = self.images[index]
         img_info = self.load_image_func(ids=[img_id])[0]
@@ -36,13 +37,15 @@ class PrefetchDataset(torch.utils.data.Dataset):
         for scale in opt.test_scales:
             if opt.task == 'ddd':
                 images[scale], meta[scale] = self.pre_process_func(
-                image, scale, img_info['calib'])
+                    image, scale, img_info['calib'])
             else:
-                images[scale], meta[scale] = self.pre_process_func(image, scale)
+                images[scale], meta[scale] = self.pre_process_func(
+                    image, scale)
             return img_id, {'images': images, 'image': image, 'meta': meta}
 
     def __len__(self):
         return len(self.images)
+
 
 def prefetch_test(opt):
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
@@ -52,13 +55,13 @@ def prefetch_test(opt):
     print(opt)
     Logger(opt)
     Detector = detector_factory[opt.task]
-    
+
     split = 'val' if not opt.trainval else 'test'
     dataset = Dataset(opt, split)
     detector = Detector(opt)
-    
+
     data_loader = torch.utils.data.DataLoader(
-        PrefetchDataset(opt, dataset, detector.pre_process), 
+        PrefetchDataset(opt, dataset, detector.pre_process),
         batch_size=1, shuffle=False, num_workers=1, pin_memory=True)
 
     results = {}
@@ -70,14 +73,15 @@ def prefetch_test(opt):
         ret = detector.run(pre_processed_images)
         results[img_id.numpy().astype(np.int32)[0]] = ret['results']
         Bar.suffix = '[{0}/{1}]|Tot: {total:} |ETA: {eta:} '.format(
-                    ind, num_iters, total=bar.elapsed_td, eta=bar.eta_td)
+            ind, num_iters, total=bar.elapsed_td, eta=bar.eta_td)
         for t in avg_time_stats:
             avg_time_stats[t].update(ret[t])
             Bar.suffix = Bar.suffix + '|{} {tm.val:.3f}s ({tm.avg:.3f}s) '.format(
-                t, tm = avg_time_stats[t])
+                t, tm=avg_time_stats[t])
         bar.next()
     bar.finish()
     dataset.run_eval(results, opt.save_dir)
+
 
 def test(opt):
     os.environ['CUDA_VISIBLE_DEVICES'] = opt.gpus_str
@@ -87,7 +91,7 @@ def test(opt):
     print(opt)
     Logger(opt)
     Detector = detector_factory[opt.task]
-    
+
     split = 'val' if not opt.trainval else 'test'
     dataset = Dataset(opt, split)
     detector = Detector(opt)
@@ -106,17 +110,19 @@ def test(opt):
             ret = detector.run(img_path, img_info['calib'])
         else:
             ret = detector.run(img_path)
-    
+
         results[img_id] = ret['results']
 
         Bar.suffix = '[{0}/{1}]|Tot: {total:} |ETA: {eta:} '.format(
-                    ind, num_iters, total=bar.elapsed_td, eta=bar.eta_td)
+            ind, num_iters, total=bar.elapsed_td, eta=bar.eta_td)
         for t in avg_time_stats:
             avg_time_stats[t].update(ret[t])
-            Bar.suffix = Bar.suffix + '|{} {:.3f} '.format(t, avg_time_stats[t].avg)
+            Bar.suffix = Bar.suffix + \
+                '|{} {:.3f} '.format(t, avg_time_stats[t].avg)
         bar.next()
     bar.finish()
     dataset.run_eval(results, opt.save_dir)
+
 
 if __name__ == '__main__':
     opt = opts().parse()
