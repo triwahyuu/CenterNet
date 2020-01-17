@@ -1,3 +1,5 @@
+.vscode/
+
 legacy/*
 .DS_Store
 debug/*
