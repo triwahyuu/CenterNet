@@ -87,16 +87,14 @@ class CTDetDataset(data.Dataset):
         num_classes = self.num_classes
         trans_output = get_affine_transform(c, s, 0, [output_w, output_h])
 
-        hm = np.zeros((num_classes, output_h, output_w), dtype=np.float32)
-        wh = np.zeros((self.max_objs, 2), dtype=np.float32)
+        hm = np.zeros((num_classes, output_h, output_w), dtype=np.float32)      ## heatmap
+        wh = np.zeros((self.max_objs, 2), dtype=np.float32)                     ## bounding-box size (width - height)
         dense_wh = np.zeros((2, output_h, output_w), dtype=np.float32)
         reg = np.zeros((self.max_objs, 2), dtype=np.float32)
         ind = np.zeros((self.max_objs), dtype=np.int64)
         reg_mask = np.zeros((self.max_objs), dtype=np.uint8)
-        cat_spec_wh = np.zeros(
-            (self.max_objs, num_classes * 2), dtype=np.float32)
-        cat_spec_mask = np.zeros(
-            (self.max_objs, num_classes * 2), dtype=np.uint8)
+        cat_spec_wh = np.zeros((self.max_objs, num_classes * 2), dtype=np.float32)
+        cat_spec_mask = np.zeros((self.max_objs, num_classes * 2), dtype=np.uint8)
 
         draw_gaussian = draw_msra_gaussian if self.opt.mse_loss else \
             draw_umich_gaussian
@@ -117,8 +115,7 @@ class CTDetDataset(data.Dataset):
                 radius = gaussian_radius((math.ceil(h), math.ceil(w)))
                 radius = max(0, int(radius))
                 radius = self.opt.hm_gauss if self.opt.mse_loss else radius
-                ct = np.array(
-                    [(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2], dtype=np.float32)
+                ct = np.array([(bbox[0] + bbox[2]) / 2, (bbox[1] + bbox[3]) / 2], dtype=np.float32)
                 ct_int = ct.astype(np.int32)
                 draw_gaussian(hm[cls_id], ct_int, radius)
                 wh[k] = 1. * w, 1. * h

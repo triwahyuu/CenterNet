@@ -39,19 +39,19 @@ def demo(opt):
         if os.path.isdir(opt.demo):
             image_names = []
             ls = os.listdir(opt.demo)
-        for file_name in sorted(ls):
-            ext = file_name[file_name.rfind('.') + 1:].lower()
-            if ext in image_ext:
-                image_names.append(os.path.join(opt.demo, file_name))
-    else:
-        image_names = [opt.demo]
+            for file_name in sorted(ls):
+                ext = file_name[file_name.rfind('.') + 1:].lower()
+                if ext in image_ext:
+                    image_names.append(os.path.join(opt.demo, file_name))
+        else:
+            image_names = [opt.demo]
 
-    for (image_name) in image_names:
-        ret = detector.run(image_name)
-        time_str = ''
-        for stat in time_stats:
-            time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
-        print(time_str)
+        for (image_name) in image_names:
+            ret = detector.run(image_name)
+            time_str = ''
+            for stat in time_stats:
+                time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
+            print(time_str)
 
 
 if __name__ == '__main__':
