@@ -50,7 +50,7 @@ def demo(opt):
             ret = detector.run(image_name)
             time_str = ''
             for stat in time_stats:
-                time_str = time_str + '{} {:.3f}s |'.format(stat, ret[stat])
+                time_str = time_str + '{} {:.3f}s | '.format(stat, ret[stat])
             print(time_str)
 
 

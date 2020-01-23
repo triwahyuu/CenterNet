@@ -19,20 +19,20 @@ class opts(object):
         self.parser.add_argument('--test', action='store_true')
         self.parser.add_argument('--debug', type=int, default=0,
                                  help='level of visualization.'
-                                 '1: only show the final detection results'
-                                 '2: show the network output features'
-                                 '3: use matplot to display'  # useful when lunching training with ipython notebook
-                                 '4: save all visualizations to disk')
+                                      '1: only show the final detection results'
+                                      '2: show the network output features'
+                                      '3: use matplot to display'  # useful when lunching training with ipython notebook
+                                      '4: save all visualizations to disk')
         self.parser.add_argument('--demo', default='',
                                  help='path to image/ image folders/ video. '
-                                 'or "webcam"')
+                                      'or "webcam"')
         self.parser.add_argument('--load_model', default='',
                                  help='path to pretrained model')
         self.parser.add_argument('--resume', action='store_true',
                                  help='resume an experiment. '
-                                 'Reloaded the optimizer parameter and '
-                                 'set load_model to model_last.pth '
-                                 'in the exp dir if load_model is empty.')
+                                      'Reloaded the optimizer parameter and '
+                                      'set load_model to model_last.pth '
+                                      'in the exp dir if load_model is empty.')
 
         # system
         self.parser.add_argument('--gpus', default='0',
@@ -59,15 +59,15 @@ class opts(object):
                                  choices=['white', 'black'])
 
         # model
-        self.parser.add_argument('--arch', default='res_18',
+        self.parser.add_argument('--arch', default='dla_34',
                                  help='model architecture. Currently tested'
-                                 'res_18 | res_101 | resdcn_18 | resdcn_101 |'
-                                 'dlav0_34 | dla_34 | hourglass')
+                                      'res_18 | res_101 | resdcn_18 | resdcn_101 |'
+                                      'dlav0_34 | dla_34 | hourglass')
         self.parser.add_argument('--head_conv', type=int, default=-1,
                                  help='conv layer channels for output head'
-                                 '0 for no conv layer'
-                                 '-1 for default setting: '
-                                 '64 for resnets and 256 for dla.')
+                                      '0 for no conv layer'
+                                      '-1 for default setting: '
+                                      '64 for resnets and 256 for dla.')
         self.parser.add_argument('--down_ratio', type=int, default=4,
                                  help='output stride. Currently only supports 4.')
 
@@ -97,7 +97,7 @@ class opts(object):
                                  help='number of epochs to run validation.')
         self.parser.add_argument('--trainval', action='store_true',
                                  help='include validation in training and '
-                                 'test on test set')
+                                      'test on test set')
 
         # test
         self.parser.add_argument('--flip_test', action='store_true',
@@ -112,47 +112,47 @@ class opts(object):
                                  help='not use parallal data pre-processing.')
         self.parser.add_argument('--fix_res', action='store_true',
                                  help='fix testing resolution or keep '
-                                 'the original resolution')
+                                      'the original resolution')
         self.parser.add_argument('--keep_res', action='store_true',
                                  help='keep the original resolution'
-                                 ' during validation.')
+                                      ' during validation.')
 
         # dataset
         self.parser.add_argument('--not_rand_crop', action='store_true',
                                  help='not use the random crop data augmentation'
-                                 'from CornerNet.')
+                                      'from CornerNet.')
         self.parser.add_argument('--shift', type=float, default=0.1,
                                  help='when not using random crop'
-                                 'apply shift augmentation.')
+                                      'apply shift augmentation.')
         self.parser.add_argument('--scale', type=float, default=0.4,
                                  help='when not using random crop'
-                                 'apply scale augmentation.')
+                                      'apply scale augmentation.')
         self.parser.add_argument('--rotate', type=float, default=0,
                                  help='when not using random crop'
-                                 'apply rotation augmentation.')
+                                      'apply rotation augmentation.')
         self.parser.add_argument('--flip', type=float, default=0.5,
                                  help='probability of applying flip augmentation.')
         self.parser.add_argument('--no_color_aug', action='store_true',
                                  help='not use the color augmenation '
-                                 'from CornerNet')
+                                      'from CornerNet')
         # multi_pose
         self.parser.add_argument('--aug_rot', type=float, default=0,
                                  help='probability of applying '
-                                 'rotation augmentation.')
+                                      'rotation augmentation.')
         # ddd
         self.parser.add_argument('--aug_ddd', type=float, default=0.5,
                                  help='probability of applying crop augmentation.')
         self.parser.add_argument('--rect_mask', action='store_true',
                                  help='for ignored object, apply mask on the '
-                                 'rectangular region or just center point.')
+                                      'rectangular region or just center point.')
         self.parser.add_argument('--kitti_split', default='3dop',
                                  help='different validation split for kitti: '
-                                 '3dop | subcnn')
+                                      '3dop | subcnn')
 
         # loss
         self.parser.add_argument('--mse_loss', action='store_true',
                                  help='use mse loss or focal loss to train '
-                                 'keypoint heatmaps.')
+                                      'keypoint heatmaps.')
         # ctdet
         self.parser.add_argument('--reg_loss', default='l1',
                                  help='regression loss: sl1 | l1 | l2')
@@ -182,7 +182,7 @@ class opts(object):
                                  help='L1(\hat(y) / y, 1) or L1(\hat(y), y)')
         self.parser.add_argument('--dense_wh', action='store_true',
                                  help='apply weighted regression near center or '
-                                 'just apply regression on center point.')
+                                      'just apply regression on center point.')
         self.parser.add_argument('--cat_spec_wh', action='store_true',
                                  help='category specific bounding box size.')
         self.parser.add_argument('--not_reg_offset', action='store_true',
@@ -199,13 +199,13 @@ class opts(object):
         # multi_pose
         self.parser.add_argument('--dense_hp', action='store_true',
                                  help='apply weighted pose regression near center '
-                                 'or just apply regression on center point.')
+                                      'or just apply regression on center point.')
         self.parser.add_argument('--not_hm_hp', action='store_true',
                                  help='not estimate human joint heatmap, '
-                                 'directly use the joint offset from center.')
+                                      'directly use the joint offset from center.')
         self.parser.add_argument('--not_reg_hp_offset', action='store_true',
                                  help='not regress local offset for '
-                                 'human joint heatmaps.')
+                                      'human joint heatmaps.')
         self.parser.add_argument('--not_reg_bbox', action='store_true',
                                  help='not regression bounding box size.')
 
@@ -233,7 +233,8 @@ class opts(object):
 
         opt.gpus_str = opt.gpus
         opt.gpus = [int(gpu) for gpu in opt.gpus.split(',')]
-        opt.gpus = [i for i in range(len(opt.gpus))] if opt.gpus[0] >= 0 else [-1]
+        opt.gpus = [i for i in range(
+            len(opt.gpus))] if opt.gpus[0] >= 0 else [-1]
         opt.lr_step = [int(i) for i in opt.lr_step.split(',')]
         opt.test_scales = [float(i) for i in opt.test_scales.split(',')]
 
@@ -358,7 +359,6 @@ class opts(object):
             def __init__(self, entries):
                 for k, v in entries.items():
                     self.__setattr__(k, v)
-
         opt = self.parse(args)
         dataset = Struct(default_dataset_info[opt.task])
         opt.dataset = dataset.dataset

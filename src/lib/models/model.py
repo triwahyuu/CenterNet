@@ -9,15 +9,15 @@ import os
 
 from .networks.msra_resnet import get_pose_net
 from .networks.dlav0 import get_pose_net as get_dlav0
-# from .networks.pose_dla_dcn import get_pose_net as get_dla_dcn
-# from .networks.resnet_dcn import get_pose_net as get_pose_net_dcn
+from .networks.pose_dla_dcn import get_pose_net as get_dla_dcn
+from .networks.resnet_dcn import get_pose_net as get_pose_net_dcn
 from .networks.large_hourglass import get_large_hourglass_net
 
 _model_factory = {
     'res': get_pose_net,  # default Resnet with deconv
     'dlav0': get_dlav0,  # default DLAup
-    # 'dla': get_dla_dcn, ## unable to compile dcn
-    # 'resdcn': get_pose_net_dcn,
+    'dla': get_dla_dcn,
+    'resdcn': get_pose_net_dcn,
     'hourglass': get_large_hourglass_net,
 }
 
@@ -54,16 +54,16 @@ def load_model(model, model_path, optimizer=None, resume=False,
     for k in state_dict:
         if k in model_state_dict:
             if state_dict[k].shape != model_state_dict[k].shape:
-                # print('Skip loading parameter {}, required shape{}, '
-                #       'loaded shape{}. {}'.format(
-                #           k, model_state_dict[k].shape, state_dict[k].shape, msg))
+                print('Skip loading parameter {}, required shape{}, '
+                      'loaded shape{}. {}'.format(
+                          k, model_state_dict[k].shape, state_dict[k].shape, msg))
                 state_dict[k] = model_state_dict[k]
         else:
-            # print('Drop parameter {}.'.format(k) + msg)
-            pass
+            print('Drop parameter {}. '.format(k) + msg)
+            # pass
     for k in model_state_dict:
         if not (k in state_dict):
-            # print('No param {}. '.format(k) + msg)
+            print('No param {}. '.format(k) + msg)
             state_dict[k] = model_state_dict[k]
     model.load_state_dict(state_dict, strict=False)
 
